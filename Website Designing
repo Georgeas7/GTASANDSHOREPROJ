@@ -1,0 +1,43 @@
+class Task:
+    def __init__(self, name, priority, required_skills):
+        self.name = name
+        self.priority = priority
+        self.required_skills = required_skills
+
+class TeamMember:
+    def __init__(self, name, skills, tasks_assigned):
+        self.name = name
+        self.skills = skills
+        self.tasks_assigned = tasks_assigned
+
+def allocate_tasks(tasks, team):
+    for task in tasks:
+        eligible_members = [
+            member for member in team if all(skill in member.skills for skill in task.required_skills)
+        ]
+        if eligible_members:
+            # Sort eligible members by their current workload and skill level
+            eligible_members.sort(key=lambda member: (len(member.tasks_assigned), len(member.skills)))
+            assigned_member = eligible_members[0]  # Assign the task to the most suitable team member
+            assigned_member.tasks_assigned.append(task.name)
+            print(f"Task '{task.name}' assigned to {assigned_member.name}")
+        else:
+            print(f"No suitable team member found for task '{task.name}'")
+
+# Sample tasks and team members
+tasks = [
+    Task("Feature A", 1, ["Python", "Django"]),
+    Task("Bug Fixing", 2, ["Java", "Spring"]),
+    Task("Database Optimization", 3, ["SQL"]),
+    # Add more tasks as needed
+]
+
+team = [
+    TeamMember("John", ["Python", "Django"], ["Task X"]),
+    TeamMember("Alice", ["Java", "Spring"], ["Task Y", "Task Z"]),
+    TeamMember("Bob", ["SQL", "Java"], []),
+    # Add more team members as needed
+]
+
+# Allocate tasks to team members
+allocate_tasks(tasks, team)
